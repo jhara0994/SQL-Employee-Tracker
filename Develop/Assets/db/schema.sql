@@ -8,12 +8,17 @@ CREATE TABLE department (
     dept_name VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE role (
+CREATE TABLE company_role (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-
-
+    title VARCHAR(30),
+    salary DECIMAL (10.3) NULL,
+    department_id INT,
 );
 
 CREATE TABLE employee (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-)
+    first_name VARCHAR(30),
+    last_name VARCHAR(30),
+    employee_role_id INT,
+    manager_id INT,
+);
