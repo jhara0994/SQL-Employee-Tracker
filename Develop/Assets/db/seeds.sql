@@ -41,6 +41,8 @@ VALUES
     ('Wade', 'Wilson', 11, NULL) --Salesperson--
     ('Robert', 'Drake', 12, NULL) --Accountant--
     ('Loki', 'Laufeyson', 13, NULL) --Paralegal--
+    ('Yondu, Udonta', 14, NULL) --Salesperson--
+    ('Carol', 'Danvers', 15, NULL) --Software Engineer--
 
 
 
