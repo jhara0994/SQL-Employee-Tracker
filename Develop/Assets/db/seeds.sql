@@ -8,7 +8,7 @@ VALUES
     ('Network Security'),
     ('Company Management'),
 
-INSERT INTO employee_role
+INSERT INTO company_role
     (title, salary, department_id)
 VALUES
     ('Sales Manager', 100000, 1),

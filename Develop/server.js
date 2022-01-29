@@ -7,8 +7,8 @@ require('dotenv').config()
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: process.env.MYSQL_PASSWORD,
-    database: 'employees_db',
+    password: process.env.DB_PASSWORD,
+    database: 'employee_db',
 })
 
 const promptUser = () => {
@@ -30,7 +30,7 @@ const promptUser = () => {
                       'Delete a role',
                       'Delete an employee',
                       'View department salary expenses',
-                      'No Action']
+                      'End this application']
         }
     ])
     .then((answers) => {
@@ -89,7 +89,8 @@ const promptUser = () => {
             viewExpenses()
         }
 
-        if (choice === 'No Action') {
+        if (choice === 'End this application') {
+            console.log('Thank you for using this application.')
             connection.end()
         }
     })
