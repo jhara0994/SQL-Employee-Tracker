@@ -95,3 +95,34 @@ const promptUser = () => {
         }
     })
 }
+
+showDepartments = () => {
+    console.log('List of all departments: \n')
+    const sql = `SELECT department_id AS id, department.name AS department FROM department`
+
+    connection.promise().query(sql, (err, rows) => {
+        if (err) throw err
+        console.table(rows)
+        promptUser()
+    })
+}
+
+showRoles = () => {
+    console.log('Showing all roles: \n')
+    const sql = `SELECT company_role_id, company_role_title, department.name FROM company_role INNER JOIN department ON company_role.department_id = department.id`
+
+    connection.promise().query(sql, (err, rows) => {
+        if (err) throw err
+        console.table(rows)
+        promptUser()
+    })
+}
+
+showEmployees = () => {
+    console.log('Showing all employees: \n')
+    const sql = `SELECT`
+}
+
+
+
+
