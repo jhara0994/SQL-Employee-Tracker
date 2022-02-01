@@ -31,10 +31,10 @@ const startApp = () => {
                       'Update an employee role',
                       'Update a manager',
                       'View employees by department',
+                      'View department salary expenses',
                       'Delete a department',
                       'Delete a role',
                       'Delete an employee',
-                      'View department salary expenses',
                       'Restart this application',
                       'End this application',
                     ],
@@ -75,6 +75,21 @@ const startApp = () => {
 
             case 'Update an employee role':{
                 updateRole();
+                break;
+            }
+
+            case 'Update a manager': {
+                updateMgr();
+                break;
+            }
+
+            case 'View employees by department': {
+                viewEmployeeByDept();
+                break
+            }
+
+            case 'View department salary expenses': {
+                deptSalaryExp();
                 break;
             }
             
@@ -336,7 +351,7 @@ selectEmployee = () => {
 selectRole = (employeeList) => {
     console.log('Updating employee role: ')
     const query = `SELECT * FROM role`
-    let roleList
+
 
     connection.query(query, function (err, res) {
         if (err) throw err
@@ -387,6 +402,64 @@ function updateEmployee (employeeList, roleList) {
             }
         )
     })
+}
+
+updateMgr = () => {
+    const query = `SELECT * FROM employee`
+
+    connection.query(query, function (err, res) {
+          if (err) throw err;
+
+          const employees = res.map(({ id, first_name, last_name}) => ({name: first_name + " "+ last_name, value: id}))
+
+          inquirer.prompt ([
+              {
+                  type:'list',
+                  name: 'name',
+                  message: 'Which manager needs to be updated?',
+                  choices: employees
+              }
+          ])
+          .then(managerChoice => {
+              const employee = managerChoice.name
+              const params = []
+
+              params.push(employee)
+
+              const managerList = `SELECT * FROM employee`
+              connection.query(managerList, function (err, res) {
+                if (err) throw err;
+
+                const managers = res.map(({ id, first_name, last_name }) => ({name: first_name + " "+ last_name, value: id}))
+
+                inquirer.prompt([
+                    {
+                    type: 'list',
+                    name: 'manager',
+                    message: "Select this employee's current manager: ",
+                    choices: managers
+                    }
+                ])
+                .then(managerChoice => {
+                    const manager = managerChoice.manager;
+                    params.push(manager)
+
+                    let employee = params [0]
+                    params[0] = manager
+                    params[1] = employee
+
+                    const sqlQuery = 'UPDATE employee SET manager_id = ? WHERE id = ?'
+                    connection.query(sqlQuery, function (err, res) {
+                        if (err) throw err;
+                        console.log('Employee/manager has been updated!')
+
+                        showEmployees()
+                    })
+                })
+              })
+          })
+    })
+
 }
 
 
