@@ -77,16 +77,6 @@ const startApp = () => {
                 updateRole();
                 break;
             }
-
-            case 'Update a manager':{
-                updateManager();
-                break;
-            }
-
-            case 'View employees by department': {
-                employeeDept();
-                break;
-            }
             
             case 'Delete a department': {
                 delDept();
@@ -100,11 +90,6 @@ const startApp = () => {
 
             case 'Delete an employee': {
                 delEmployee();
-                break;
-            }
-
-            case 'View department salary expenses': {
-                viewExpenses();
                 break;
             }
 
@@ -294,7 +279,7 @@ addEmployee = () => {
             {
                 first_name: answer.first_name,
                 last_name: answer.last_name,
-                company_role_id: answer.company_role_id,
+                role_id: answer.role_id,
                 manager_id: answer.manager_id,
             },
             function (err, res) {
@@ -320,7 +305,7 @@ logEmployee = () => {
             value: id,
             first_name: `${first_name}`,
             last_name: `${last_name}`,
-            company_role_id: `${company_role_id}`,
+            role_id: `${role_id}`,
             manager_id: `${manager_id}`,
         }))
 
@@ -337,7 +322,7 @@ selectEmployee = () => {
     const query = `SELECT * FROM employee`
 
     connection.query(query, function (err, res) {
-        if (err) throw err
+        if (err) throw err;
 
         const employeeList = res.map(({ id, first_name, last_name}) => ({
             value: id,
@@ -380,7 +365,7 @@ function updateEmployee (employeeList, roleList) {
         },
         {
             type: 'list', 
-            name: 'company_role_id',
+            name: 'role_id',
             message: 'Select the updated role: ',
             choices: roleList,
         },
@@ -390,7 +375,7 @@ function updateEmployee (employeeList, roleList) {
 
         connection.query (
             query,
-            [answer.company_role_id, answer.employee_id],
+            [answer.role_id, answer.employee_id],
 
             function (err, res) {
                 if (err) throw err
