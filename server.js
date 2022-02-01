@@ -154,6 +154,22 @@ showEmployees = () => {
     });
 }
 
+logDepartment = () => {
+    console.log('Including department in list:')
+    const query = 'SELECT * FROM department';
+
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+
+        const deptList = res.map(({ id, dept_name }) => ({
+            value: id,
+            department: `${dept_name}`,
+        }))
+
+        addDept(deptList)
+    })
+}
+
 addDept = () => {
     inquirer.prompt ([
         {
@@ -188,19 +204,19 @@ addDept = () => {
     })
 }
 
-logDepartment = () => {
-    console.log('Including department in list:')
-    const query = 'SELECT * FROM department';
+logRole = () => {
+    console.log('Including role in list: ')
+    const query = 'SELECT * FROM department'
 
-    connection.query(query, function(err, res) {
+    connection.query(query, function (err, res) {
         if (err) throw err;
 
-        const deptList = res.map(({ id, dept_name }) => ({
+        const roleList = res.map(({ id, role_name}) => ({
             value: id,
-            department: `${dept_name}`,
+            role: `${role_name}`
         }))
 
-        addDept(deptList)
+        addRole(roleList)
     })
 }
 
@@ -246,19 +262,22 @@ addRole =() => {
     })
 }
 
-logRole = () => {
-    console.log('Including role in list: ')
+logEmployee = () => {
+    console.log('Including new employee in list:')
     const query = 'SELECT * FROM department'
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
+    connection.query(query, function(err, res) {
+        if (err) throw err
 
-        const roleList = res.map(({ id, role_name}) => ({
+        const employeeList = res.map(({ id, first_name, last_name, role_id, manager_id}) => ({
             value: id,
-            role: `${role_name}`
+            first_name: `${first_name}`,
+            last_name: `${last_name}`,
+            role_id: `${role_id}`,
+            manager_id: `${manager_id}`,
         }))
 
-        addRole(roleList)
+        addEmployee(employeeList)
     })
 }
 
@@ -306,25 +325,6 @@ addEmployee = () => {
                 startApp()
             }
         )
-    })
-}
-
-logEmployee = () => {
-    console.log('Including new employee in list:')
-    const query = 'SELECT * FROM department'
-
-    connection.query(query, function(err, res) {
-        if (err) throw err
-
-        const employeeList = res.map(({ id, first_name, last_name, role_id, manager_id}) => ({
-            value: id,
-            first_name: `${first_name}`,
-            last_name: `${last_name}`,
-            role_id: `${role_id}`,
-            manager_id: `${manager_id}`,
-        }))
-
-        addEmployee(employeeList)
     })
 }
 
@@ -404,6 +404,7 @@ function updateEmployee (employeeList, roleList) {
     })
 }
 
+// Bonus points section - still working on the code from here down
 updateMgr = () => {
     const query = `SELECT * FROM employee`
 
