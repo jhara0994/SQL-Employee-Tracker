@@ -301,7 +301,7 @@ logEmployee = () => {
     connection.query(query, function(err, res) {
         if (err) throw err
 
-        const employeeList = res.map(({ id, first_name, last_name, company_role_id, manager_id}) => ({
+        const employeeList = res.map(({ id, first_name, last_name, role_id, manager_id}) => ({
             value: id,
             first_name: `${first_name}`,
             last_name: `${last_name}`,
@@ -371,7 +371,7 @@ function updateEmployee (employeeList, roleList) {
         },
     ])
     .then (function (answer) {
-        const query = `UPDATE employee SET company_role_id = ? WHERE id = ?`
+        const query = `UPDATE employee SET role_id = ? WHERE id = ?`
 
         connection.query (
             query,
