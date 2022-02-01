@@ -1,18 +1,17 @@
 const mysql = require('mysql2')
 const inquirer = require('inquirer')
-
 require('dotenv').config()
 
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    port: 3306,
+    user: 'root',
+    password: 'Rcr_2931',
     database: process.env.DB_NAME,
 })
 
 connection.connect(function (err) {
     if (err) throw err;
-    // run the start function after the connection is made to prompt the user
     startApp();
   });
 
@@ -41,9 +40,9 @@ const startApp = () => {
                     ],
         },
     ])
-    .then( function ({answer}) {
+    .then( function ({ choices }) {
 
-        switch (answer) {
+        switch (choices) {
             case 'View all departments': {
                 showDepartments();
                 break;
@@ -123,45 +122,43 @@ const startApp = () => {
     });
 }
 
-function showDepartments() {
-    console.log("You are now viewing ALL Departments");
-  
+showDepartments = () => {
     const query = `SELECT * FROM department`;
+
     connection.query(query, function (err, res) {
       if (err) throw err;
       console.table(res);
-      console.log("Departments Showing!\n");
       startApp();
     });
   }
 
 showRoles = () => {
-    console.log('Showing all roles: \n')
-    const query = `SELECT * FROM company_role`
+    console.log('Showing all roles:')
+    const query = `SELECT * FROM role`;
 
-    connection.query(query, (err, rows) => {
+    connection.query(query, (err, res) => {
         if (err) throw err
-        console.table('All roles:', res)
+        console.table (res)
         startApp()
-    })
+    });
 }
 
 showEmployees = () => {
-    console.log('Showing all employees: \n')
-    const query = `SELECT * FROM employee`
+    console.log('Showing all employees:')
+    const query = `SELECT * FROM employee`;
     
-    connection.query(query, (err, rows) => {
+    connection.query(query, (err, res) => {
         if (err) throw err
-        console.table('All employees:', res)
+        console.table(res)
         startApp()
-    })
+    });
 }
 
-addDept =() => {
+addDept = () => {
     inquirer.prompt ([
         {
             type: 'input',
-            name: 'addDept',
+            name: 'dept_name',
             message: 'What is the name of the department you want to add?',
             validate: addDept => {
                 if (addDept) {
@@ -179,11 +176,11 @@ addDept =() => {
     connection.query(
         query,
          {
-             department_name: answer.department_name,
+             dept_name: answer.dept_name,
           },
         function (err, res) {
             if(err) throw err
-            console.log(`${answer.department_name} added to departments`)
+            console.log(`${answer.dept_name} added to departments`)
             console.table(res)
 
             startApp()
@@ -193,14 +190,14 @@ addDept =() => {
 
 logDepartment = () => {
     console.log('Including department in list:')
-    const query = 'SELECT * FROM department'
+    const query = 'SELECT * FROM department';
 
     connection.query(query, function(err, res) {
-        if (err) throw err
+        if (err) throw err;
 
-        const deptList = res.map(({ id, department_name}) => ({
+        const deptList = res.map(({ id, dept_name }) => ({
             value: id,
-            department: `${department_name}`,
+            department: `${dept_name}`,
         }))
 
         addDept(deptList)
@@ -211,43 +208,37 @@ addRole =() => {
     inquirer.prompt ([
         {
             type: 'input',
-            name: 'first_name',
-            message: "Enter employee's first name: ",
+            name: 'title',
+            message: "Enter the new role title: ",
         },
         {
             type: 'input',
-            name: 'last_name',
-            message: "Enter employee's last name: ",
+            name: 'salary',
+            message: "Enter the salary for this role: ",
         },
         {
             type: 'input',
-            name: 'company_role_id',
+            name: 'department_id',
             message: 'Enter role ID for new employee: ',
-        },
-        {
-            type: 'input',
-            name: 'manager_id',
-            message: 'Enter manager ID (if applicable) for new employee: ',
         },
     ])
     .then(answer => {
         console.log(answer)
 
-        const query = `INSERT INTO employee SET ?`
+        const query = `INSERT INTO role SET ?`
 
         connection.query(
             query,
             {
-                first_name: answer.first_name,
-                last_name: answer.last_name,
-                company_role_id: answer.company_role_id,
-                manager_id: answer.manager_id,
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.department_id,
             },
             function (err, res) {
                 if (err) throw err;
 
                 console.table(res)
-                console.log(`${answer.first_name} ${answer.last_name} has been added \n`)
+                console.log(`${answer.title} has been added \n`)
 
                 startApp()
             }
@@ -260,11 +251,11 @@ logRole = () => {
     const query = 'SELECT * FROM department'
 
     connection.query(query, function (err, res) {
-        if (err) throw err
+        if (err) throw err;
 
-        const roleList = res.map(({ id, company_role_name}) => ({
+        const roleList = res.map(({ id, role_name}) => ({
             value: id,
-            company_role: `${company_role_name}`
+            role: `${role_name}`
         }))
 
         addRole(roleList)
@@ -285,7 +276,7 @@ addEmployee = () => {
         },
         {
             type: 'input',
-            name: 'company_role_id',
+            name: 'role_id',
             message: 'Enter the role ID for the new employee: ',
         },
         {
